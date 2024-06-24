@@ -1,0 +1,167 @@
+<%- include('partials/head') %>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container mt-3 mb-3">
+        <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
+        <input type="hidden" id="videoid" value="<%= video._id %>">
+        <input type="hidden" id="user" value="<%= user ? user._id : "-1" %>">
+        <video id="video" style="width: 1050px; height: 480px; border-radius: 15px; border: 1px solid black;" controls>
+            <source src="<%= video.videoPath %>" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <br>
+        <br>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h2><%= video.title %></h2>
+                <p><%= video.description %></p>
+                <small>Görüntülenme: <span id="viewsNumber"><%= video.views %></span></small>
+            </div>
+            <div style="margin-left: 750px;">
+                <button class="btn btn-<%= user && user._id == video.userId ? "dark":"light" %>" onclick="likeOperation()">
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <span id="likeNumber"><%= video.likeCount.length %></span>
+                </button>
+                <button class="btn btn-light" onclick="unLikeOperation()">
+                    <i class="bi bi-hand-thumbs-down-fill"></i>
+                    <span id="unLikeNumber"><%= video.unLikeCount.length %></span>
+                </button>
+            </div>
+        </div>
+        <div style="margin: 30px 0; display: flex; justify-content: space-between; align-items: center; width: 1050px;">
+                <a href="/channels/details/<%= channel._id %>" style="color: black; text-decoration: none;">
+                    <div>
+                        <img src="<%= channel.logoPath %>" style="width: 50px; border-radius: 60px; border: 1px solid black;" alt="">
+                        <%= channel.title %>
+                    </div>
+                </a>
+                <button class="btn btn-warning btn-sm" id="subscribeBtn" onclick="subscribeOperation('<%= channel._id %>')">Abone Ol</button>
+            </div>
+        <br>
+        <h2 style="text-align: center;">Yorumlar</h2>
+        <% if (isAuth) { %>
+            <section>
+                <div style="display: flex; justify-content: space-evenly; align-items: center; margin: 15px 0;">
+                    <label>Yorumu Giriniz:</label>
+                    <input type="text" name="commentTxt" id="commentTxt" class="form-control w-50">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="addComment()">Ekle</button>
+                </div>
+            </section>
+        <% } %> 
+           <% if (!isAuth) { %>
+                <small style="text-align: center;"><a href="/login">Yorum ekle</a></small>
+           <% } %>
+            <div style="display: block; margin-top: 25px;" id="commentList"></div>
+        <br>
+    </div>
+    <script src="https://unpkg.com/axios@1.4.0/dist/axios.min.js"></script>
+    <script>
+        const video = document.querySelector("#video");
+        const videoid = document.querySelector("#videoid").value;
+        const userid = document.querySelector("#user").value;
+        const commentList = document.querySelector("#commentList");
+        axios.get(`http://localhost:3000/comments/${videoid}`)
+            .then((res)=>res.data).then(({comments})=>{
+                comments.forEach(comment => {
+                    axios.get("http://localhost:3000/user/"+comment.userId)
+                        .then((res)=>{
+                            commentList.innerHTML += `
+                                <div>
+                                    <h5>${res.data.userName}</h5>
+                                    <p>${comment.comment}</p>
+                                </div>
+                            `;
+                        }).catch((e)=>console.log(e))
+                });
+                
+            }).catch((e)=>console.log(e));
+
+
+        video.addEventListener("ended", ()=>{
+            const viewsNumber = document.querySelector("#viewsNumber");
+            const id = window.location.pathname.split("/")[2];
+            axios.get(`http://localhost:3000/videos/api/views/${id}`)
+                .then((res)=>res.data)
+                .then((data)=>{
+                    viewsNumber.innerHTML = "";
+                    viewsNumber.innerHTML = data.viewsCount;
+                }).catch((e)=>console.log(e));
+        });
+
+        const addComment = () =>{
+            if (userid=="-1") {
+                return window.location.href = "/login";
+            }
+            let commentTxt = document.querySelector("#commentTxt").value;
+            axios.post(`http://localhost:3000/comments/${videoid}`, {
+                    userid: userid,
+                    comments: commentTxt,
+                }, {
+                    headers: {
+                        "Content-type": "application/json",
+                        "csrf-token": document.querySelector("#csrfToken").value
+                    }
+                })
+                .then((response) => {
+                    axios.get("http://localhost:3000/user/"+userid)
+                        .then((res)=>{
+                            commentList.innerHTML="";
+                            response.data.videoComments.forEach(comment => {
+                                commentList.innerHTML += `
+                                    <div>
+                                        <h4>${res.data.userName}</h4>
+                                        <p>${comment.comment}</p>
+                                    </div>
+                                `;
+                            });
+                        }).catch((e)=>console.log(e));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        };
+        const likeNumber = document.querySelector("#likeNumber");
+        const unLikeNumber = document.querySelector("#unLikeNumber");
+        const id = window.location.pathname.split("/")[2];
+
+        const likeOperation = () => {
+            if (userid=="-1") {
+                return window.location.href = "/login";
+            }
+            fetch(`http://localhost:3000/videos/api/like?videoid=${id}&userid=${userid}`)
+                .then((res)=>res.json()).then((data)=>{
+                    likeNumber.innerHTML = "";
+                    likeNumber.innerHTML = data.likeCount;
+                    unLikeNumber.innerHTML = data.unLikeCount;
+                }).catch((e)=>console.log(e));
+        }
+
+        const unLikeOperation = () =>{
+            if (userid=="-1") {
+                return window.location.href = "/login";
+            }
+            fetch(`http://localhost:3000/videos/api/unlike?videoid=${id}&userid=${userid}`)
+                .then((res)=>res.json())
+                .then((data)=>{
+                    unLikeNumber.innerHTML = "";
+                    unLikeNumber.innerHTML = data.unLikeCount;
+                    likeNumber.innerHTML = data.likeCount;
+                }).catch((e)=>console.log(e));
+        };
+
+        const subscribeOperation = async(channelId) =>{
+            if (userid == -1) {
+                return window.location.href = "/login";
+            }
+            const subscribesBtn = document.querySelector("#subscribeBtn");
+            const response = await axios.get(`http://localhost:3000/channels/subscribes?channelid=${channelId}&userid=${userid}`)
+            const data = response.data;
+            if (data.state) {
+                subscribesBtn.innerHTML = `Abone Olundu - ${data.subscribesCount}`;
+            } else{
+                subscribesBtn.innerHTML = `Abone Ol`;
+            }
+        };
+    </script>
+</body>
+</html>

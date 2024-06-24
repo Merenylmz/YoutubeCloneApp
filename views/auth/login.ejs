@@ -1,0 +1,18 @@
+<%- include('../partials/head') %>
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+        <form method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <label>Email Veya Kullanıcı Adınız:</label>
+            <input type="email" name="email" id="email" class="form-control">
+            <br>
+            <label>Şifreniz:</label>
+            <input type="password" name="password" id="password" class="form-control">
+            <br>
+            <button type="submit" class="btn btn-primary">Giriş Yap</button>
+        </form>
+    </div>
+</body>
+</html>

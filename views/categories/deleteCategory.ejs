@@ -1,0 +1,16 @@
+<%- include('../partials/head') %>
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+        <div class="card">
+            <form method="post" style="text-align: center;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <br>
+                <a href="/categories" class="btn btn-warning mb-5">Geri Dön</a>
+                <button type="submit" class="btn btn-danger mb-5">Sil</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

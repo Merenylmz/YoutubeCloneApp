@@ -1,0 +1,26 @@
+<%- include('partials/head') %>
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container mt-3">
+        <table class="table table-striped">
+            <tr>
+                <th>Video Başlığı</th>
+                <th>Video Açıklaması</th>
+                <th>İşlemler</th>
+            </tr>
+            <% videos.forEach(video => { %>
+                <tr>
+                    <td><%= video.title %></td>
+                    <td><%= video.description %></td>
+                    <td>
+                        <a href="/videos/delete/<%= video._id %>" class="btn btn-danger btn-sm">Sil</a>
+                        <a href="/videos/edit/<%= video._id %>" class="btn btn-primary btn-sm">Düzenle</a>
+                    </td>
+                </tr>
+            <% }) %>
+        </table>
+        <br>
+        <a href="/videos/add" class="btn btn-primary">Yeni Video Ekle</a>
+    </div>
+</body>
+</html>

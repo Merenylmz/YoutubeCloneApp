@@ -1,0 +1,54 @@
+<%- include('../partials/head') %>
+
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+
+        <div class="card mb-3">
+            <div style="text-align: center; background-color: rgb(241, 241, 241);">
+                <img src="<%= channel.logoPath %>" class="card-img-top" alt="..." style="height: 200px; width: 300px;  ">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title"><%= channel.title %></h5>
+              <p class="card-text"><%= channel.description %></p>
+              <p class="card-text"><small class="text-body-secondary">Video Sayısı: <%= channel.videos.length %></small></p>
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <p style="margin-right: 50px;">Abone Sayısı: <span id="subscribesCount"><%= channel.subscribes.length %></span></p>
+                <button class="btn btn-<%= channel.subscribes.some((item)=>item.userId == userid) ? "dark":"warning" %>" onclick="addSubscribes('<%= userid %>', '<%= channel._id %>')">Abone ol</button>
+            </div>
+            </div>
+        </div>
+        <h2 style="text-align: center;">Videolar</h2>
+        <% if (videos[0] == null) { %>
+         <p style="text-align: center; margin-top: 55px;">Henüz bir video yüklenmemiş</p>
+        <% } %>
+        <div class="row">
+            <% videos.forEach(video => { %>
+                <div class="col-4">
+                    <a href="/details/<%= video._id %>" style="text-decoration: none;">
+                        <div class="card" style="width: 18rem;">
+                            <img src="<%= video.videoContentImageUrl %>" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h4><%= video.title %></h4>
+                                <p class="card-text"><%= video.description %><p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+    <script src="https://unpkg.com/axios@1.4.0/dist/axios.min.js"></script>
+    <script>
+        const addSubscribes = async(userid, channelid) =>{
+            if (userid == -1) {
+                return window.location.href = "/login";
+            }
+            const response = await axios.get(`http://localhost:3000/channels/subscribes?channelid=${channelid}&userid=${userid}`)
+            const data = response.data;
+            document.querySelector("#subscribesCount").innerHTML = `${data.subscribesCount}`;
+        };
+    </script>
+</body>
+</html>

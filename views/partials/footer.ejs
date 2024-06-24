@@ -1,0 +1,38 @@
+<div style="position: relative; bottom: 0; margin-top: 180px;">
+    <footer class="row py-5 border-top" >
+      <div class="col mb-3">
+        <a href="/" class="d-flex align-items-center mb-3 link-dark text-decoration-none"></a>
+        <% let d = new Date(); %>
+        <p class="text-muted">© <%= d.getFullYear() %> Muhammet Eren YILMAZ</p>
+      </div>
+  
+      <div class="col mb-4">
+        <p>Site İle Alakalı herhangi bir sorun veya sorunuz varsa iletebilirsiniz</p>
+        <label>Mesaj</label>
+        <input type="text" id="questionAndWarning" class="form-control">
+        <button class="btn btn-warning btn-sm mt-2">Gönder</button>
+
+      </div>
+  
+      <div class="col mb-3">
+        <h5>Kategoriler</h5>
+        <ul class="nav flex-column">
+          <% categories.forEach(category => { %>
+            <li class="nav-item mb-2"><a href="/videos/cat/<%= category._id %>" class="nav-link p-0 text-muted"><%= category.name %></a></li>
+          <% }) %>
+        </ul>
+      </div>
+  
+      <div class="col mb-3">
+        <h5>Sayfalar</h5>
+        <ul class="nav flex-column" >
+          <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Anasayfa</a></li>
+          <li class="nav-item mb-2"><a href="/channels" class="nav-link p-0 text-muted">Kanallar</a></li>
+          <li class="nav-item mb-2"><a href="/" class="nav-link p-0 text-muted">Videolar</a></li>
+          <li class="nav-item mb-2"><a href="/login" class="nav-link p-0 text-muted">Giriş Yap</a></li>
+          <li class="nav-item mb-2"><a href="/register" class="nav-link p-0 text-muted">Kayıt Ol</a></li>
+        </ul>
+      </div>
+  
+    </footer>
+</div>

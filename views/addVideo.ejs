@@ -1,0 +1,39 @@
+<%- include('partials/head') %>
+
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container mt-3">
+        <form method="post" action="/videos/add?_csrf=<%=csrfToken%>" enctype="multipart/form-data">
+            <label>Başlığı Giriniz</label>
+            <input type="text" name="title" id="title" class="form-control">
+            <br>
+            <label>Açıklamayı Giriniz</label>
+            <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
+            <br>
+            <label>Videoyu Giriniz</label>
+            <input type="file" name="video" id="video" class="form-control" accept="video/*">
+            <br>
+            <label>Video Görselini Giriniz</label>
+            <input type="file" name="file" id="file" class="form-control" accept="image/*">
+            <br>
+            <label>Video Kategorisini Giriniz</label>
+            <select name="categoryId" id="categoryId" class="form-control">
+                <option value="-1">Seçiniz...</option>
+                <% categories.forEach(category => { %>
+                    <option value="<%= category._id %>"><%= category.name %></option>
+                <% }) %>
+            </select>
+            <br>
+            <label>Hangi Kanalda Paylaşılcağını Giriniz</label>
+            <select name="channelId" id="channelId" class="form-control">
+                <option value="-1">Seçiniz...</option>
+                <% channels.forEach(channel => { %>
+                    <option value="<%= channel._id %>"><%= channel.title %></option>
+                <% }) %>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-warning">Ekle</button>
+        </form>
+    </div>
+</body>
+</html>

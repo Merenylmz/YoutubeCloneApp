@@ -1,0 +1,24 @@
+shorts sistemi için pagination gibi bir işlem yapıcaz ilk başta belirli bir offset değeri almamız lazım 
+sonrasında o offsete bağlı olarak diyelimki 5 ofssetten sonra ilk videoyu getir bu şekilde yapılabilir
+limit değerimiz ise 1 olucak
+
+
+
+
+
+
+NOT !!!!
+Eğer form multipart formdata ise multer upload middleware ını tanımlamadan bodyden veri alamazsın 
+
+
+
+
+
+ ${
+    data.shorts.comments.map(comment=>(
+        <div style="display: flex;">
+            <h6 style="margin-top: 3px;">Kişi adı: &nbsp;</h6>
+            <p>{comment.comment}</p>
+        </div>
+    ))
+}

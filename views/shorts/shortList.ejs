@@ -1,0 +1,32 @@
+<%- include('../partials/head') %>
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+        <input type="hidden" id="csrfToken" value="<%= csrfToken %>">
+        <table class="table table-striped">
+            <tr>
+                <th>Kanal Başlığı</th>
+                <th>Kanal Açıklaması</th>
+                <th>İşlemler</th>
+            </tr>
+            <tr></tr>
+        </table>
+        <br>
+        <a href="/channels/add" class="btn btn-primary">Yeni Kanal Ekle</a>
+    </div>
+    <script>
+        const deleteItem = (id) =>{
+            if (confirm("Silmek İstediğinizden Emin misiniz ?")) {
+                fetch("http://localhost:3000/channels/api/"+id, {
+                    headers: {
+                        'x-csrf-Token': csrfToken.value,
+                    },
+                    method: "DELETE",
+                }).then((res)=>res.json()).then((data)=>{
+                    window.location.reload();
+                }).catch((e)=>console.log(e));
+            }
+        };
+    </script>
+</body>
+</html>

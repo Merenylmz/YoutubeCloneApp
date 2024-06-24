@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+        <h5 style="text-align: center; margin: 15px 0;">Eğer Kanalın resmini değiştirmek istiyorsanız seçim yapınız.</h5>
+        <form method="post" action="/channels/edit/<%= channel._id %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<%= channel._id %>">
+            <label>Kanal Başlığını Giriniz</label>
+            <input type="text" name="title" id="title" class="form-control" value="<%= channel.title %>">
+            <br>
+            <label>Açıklamayı Giriniz</label>
+            <textarea name="description" id="description" cols="30" rows="5" class="form-control"><%= channel.description %></textarea>
+            <br>
+            <div style="display: flex; align-items: center;">
+                <div>
+                    <label>Yeni Resimi Giriniz</label>
+                    <input type="file" name="logoPath" id="logoPath" class="form-control">
+                </div>
+                <img src="<%= channel.logoPath %>" alt="" style="width: 150px; margin:0 35px; border-radius: 10px;">
+                <small>Resimi Değiştirmeden Devam etmek için bu kısmı boş bırakabilirsiniz</small>
+            </div>
+            <input type="hidden" name="logoUrl" value="<%= channel.logoPath %>">
+            <br>
+            <button type="submit" class="btn btn-warning">Değişiklikleri Kaydet</button>
+        </form>
+    </div>
+</body>
+</html>

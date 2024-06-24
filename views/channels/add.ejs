@@ -1,0 +1,21 @@
+<%- include('../partials/head') %>
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+        <h6 style="text-align: center;">Logo Girmek zorunda değilsiniz</h6>
+        <form method="post" action="/channels/add?_csrf=<%=csrfToken%>&userid=<%= userid %>" enctype="multipart/form-data">
+            <label>Başlığı Giriniz</label>
+            <input type="text" name="title" id="title" class="form-control">
+            <br>
+            <label>Açıklamayı Giriniz</label>
+            <textarea type="text" name="description" id="description" class="form-control"></textarea>
+            <br>
+            <label>Kanal Logosunu Giriniz</label>
+            <input type="file" name="logoPath" id="logoPath" class  ="form-control" accept="image/*">
+            <br>
+            <button type="submit" class="btn btn-warning">Oluştur</button>
+        </form>
+    </div>
+</body>
+</html>

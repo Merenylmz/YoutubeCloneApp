@@ -1,0 +1,24 @@
+<%- include('../partials/head') %>
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+        <table class="table table-striped">
+            <tr>
+                <th>Kategori Başlığı</th>
+                <th>İşlemler</th>
+            </tr>
+            <% categories.forEach(category => { %>
+                <tr>
+                    <td><%= category.name %></td>
+                    <td>
+                        <a href="/categories/delete/<%= category._id %>" class="btn btn-danger btn-sm">Sil</a>
+                        <a href="/categories/edit/<%= category._id %>" class="btn btn-primary btn-sm">Düzenle</a>
+                    </td>
+                </tr>
+            <% }) %>
+        </table>
+        <br>
+        <a href="/categories/add" class="btn btn-primary">Yeni Kategori Ekle</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<%- include('../partials/head') %>
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3">
+        <form method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <label>Başlığı Giriniz</label>
+            <input type="text" name="name" id="name" class="form-control" value="<%= category.name %>">
+            <br>
+            <button type="submit" class="btn btn-warning">Değişiklikleri Kaydet</button>
+        </form>
+    </div>
+</body>
+</html>

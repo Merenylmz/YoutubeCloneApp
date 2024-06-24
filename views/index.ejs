@@ -1,0 +1,34 @@
+<%- include('partials/head') %>
+
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container mt-3">
+        <br>
+        <h5 style="text-align: center;">Kategoriler</h5>
+        <div>
+            <% categories.forEach(category => { %>
+                <a href="/videos/cat/<%= category._id %>" class="btn btn-warning btn-sm me-2 mb-3"><%= category.name %></a>
+            <% }) %>
+        </div>
+        <hr>
+        <br>
+        <h5 style="text-align: center; margin-bottom: 20px;">Videolar</h5>
+        <div class="row">
+            <% videos.forEach(video => { %>
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <a href="/details/<%= video._id %>" style="text-decoration: none;">
+                        <div class="card" style="height: 320px; margin-bottom: 10px;">
+                            <img src="<%= video.videoContentImageUrl %>" style="height: 220px;" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= video.title %></h5>
+                                <p class="card-text"><%= video.description %></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

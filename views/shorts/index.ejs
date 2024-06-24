@@ -1,0 +1,188 @@
+<%- include('../partials/head') %>
+
+<style>
+    #commentTabs{
+        position: absolute; 
+        z-index: 10;
+        border: 1px solid black; 
+        background-color: rgb(255, 255, 255);
+        border-radius: 10px;
+        padding: 15px;
+        width: 87%;
+        height: 170px;
+        margin-left: 50px;
+        overflow: scroll;
+        display: none;
+    }
+</style>
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3" id="videoPass">
+        <br>
+        <h5 style="text-align: center;">Shorts</h5>
+        <br>
+        <input type="hidden" id="userid" value="<%= user && user._id %>">
+        <a href="/shorts/add" class="btn btn-primary btn-sm">+</a>
+        <div class="card" style="width: 30rem; margin: 0 auto;">
+            <video controls style="width: 29.9rem;">
+                <source src="" type="">
+            </video>
+            <div class="card-body">
+                <h4>Şablon bu</h4>
+                <p class="card-text">Video Gelmedi şablonda şuan</p>
+                <div id="commentTabs">
+                    <div style="display: flex;">
+                        <h6 style="margin-top: 3px;">Kişi adı: &nbsp;</h6>
+                        <p>Bu ne ya</p>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+                    <div>
+                        <button class="btn btn-light" onclick="showHideCommentTabs()">
+                            <i class="bi bi-chat-left-text-fill"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn btn-light" onclick="likeOperation()">
+                            <i class="bi bi-hand-thumbs-up-fill"></i>
+                            <div class="likeCount"></div>
+                        </button>
+                        <button class="btn btn-light" onclick="unLikeOperation()">
+                            <i class="bi bi-hand-thumbs-down-fill"></i>
+                            <div class="unLikeCount"></div>
+                        </button>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <a style="align-items: center; display: flex; text-decoration: none; color: black;" href="/channels/:id">
+                        <img src="https://cpmr-islands.org/wp-content/uploads/sites/4/2019/07/test.png" alt="resim" style="width: 50px; border: 1px solid black; border-radius: 100px;">
+                        <p class="mt-3 ms-2">Lorem, ipsum.</p>
+                    </a>
+                    <p class="mt-3">Görüntülenme: 123123</p>
+                </div>
+            </div>
+        </div>
+
+        <button id="btnPass" type="button" class="btn btn-primary btn-sm">Geç</button>
+
+    </div>
+    <script src="https://unpkg.com/axios@1.4.0/dist/axios.min.js"></script>
+    <script>
+        
+        const short = document.querySelector("#short");
+        const userId = document.querySelector("#userid");
+        let shortvideo = null;
+        
+        let shortId = null;
+        let offset = 0;
+        const card = document.querySelector(".card");
+        
+        const showHideCommentTabs = () =>{
+            const commentTabs = document.querySelector("#commentTabs");
+            console.log("asdkasdasdşl");
+            if (commentTabs.style.display == "block") {
+                commentTabs.style.display = "none";
+            } else {
+                commentTabs.style.display = "block";
+            }
+        };
+
+        const likeOperation = async() =>{
+            const likecount = document.querySelector(".likeCount");
+            const unLikecount = document.querySelector(".unLikeCount");
+
+            if (!userId.value && !shortId) {
+                return window.location.href = "/login";
+            }
+            
+            const response = await axios.get(`http://localhost:3000/shorts/like/api?userid=${userId.value}&shortid=${shortId}`);
+            const data = response.data;
+            if (data) {
+                likecount.innerHTML = ``;
+                unLikecount.innerHTML = ``;
+                likecount.innerHTML = data.likeCount;
+                unLikecount.innerHTML = data.unLikeCount;
+            }
+        };
+
+        const unLikeOperation = async() =>{
+            const likecount = document.querySelector(".likeCount");
+            const unLikecount = document.querySelector(".unLikeCount");
+            if (!userId.value && !shortId) {
+                return window.location.href = "/login";
+            }
+
+            const response = await axios.get(`http://localhost:3000/shorts/unlike/api?userid=${userId.value}&shortid=${shortId}`);
+            const data = response.data;
+            if (data) {
+                likecount.innerHTML = ``;
+                unLikecount.innerHTML = ``;
+                likecount.innerHTML = data.likeCount;
+                unLikecount.innerHTML = data.unLikeCount;
+            }
+        };
+
+        const getVideo = () =>{
+            card.innerHTML = ``;
+            axios.get("http://localhost:3000/shorts/api?offset="+offset).then((res)=>res.data).then((data)=>{
+
+                if (data.shorts) {
+                    offset = Number.parseInt(data.offset) + 1;
+                    shortId = data.shorts._id;
+                    console.log(data.shorts.comments);
+                    card.innerHTML = `
+                        <video controls style="width: 29.9rem;" id="shortvideo" autoplay muted>
+                            <source src="${data.shorts.videoUrl}" type="">
+                        </video>
+                        <div class="card-body">
+                            <h4>${data.shorts.title}</h4>
+                            <p class="card-text">${data.shorts.description}</p>
+                            <div id="commentTabs">
+                               
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+                                <div>
+                                    <button class="btn btn-light" onclick="showHideCommentTabs()">
+                                        <i class="bi bi-chat-left-text-fill"></i>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button class="btn btn-light" onclick="likeOperation()">
+                                        <i class="bi bi-hand-thumbs-up-fill"></i>
+                                        <span class="likeCount">${data.shorts.like.length}</span>
+                                    </button>
+                                    <button class="btn btn-light" onclick="unLikeOperation()">
+                                        <i class="bi bi-hand-thumbs-down-fill"></i>
+                                        <span class="unLikeCount">${data.shorts.unLike.length}</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <a style="align-items: center; display: flex; text-decoration: none; color: black;" href="/channels/:id">
+                                    <img src="https://cpmr-islands.org/wp-content/uploads/sites/4/2019/07/test.png" alt="resim" style="width: 50px; border: 1px solid black; border-radius: 100px;">
+                                    <p class="mt-3 ms-2">Lorem, ipsum.</p>
+                                </a>
+                                <p class="mt-3" id="viewsCount">Görüntülenme: ${data.shorts.views}</p>
+                            </div>
+                        </div>
+                    `;
+                    shortvideo = document.querySelector("#shortvideo");
+                    shortvideo.addEventListener("ended", async()=>{
+                        const viewsCount = document.querySelector("#viewsCount");
+                        if (!shortId) {return window.location.reload();};
+
+                        const response = await axios.get(`http://localhost:3000/shorts/views/api?shortid=${shortId}`);
+                        const data = response.data;
+                        if (data) {
+                            viewsCount.innerHTML="";
+                            viewsCount.innerHTML="Görüntülenme: "+data.views;
+                        }
+                    });
+                }
+            });
+        };
+        getVideo();
+        document.querySelector("#btnPass").addEventListener("click", ()=>getVideo());
+    </script>
+</body>
+</html>

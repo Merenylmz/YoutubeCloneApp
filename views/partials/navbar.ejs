@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg bg-warning">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">ErenTube</a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Anasayfa</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/channels">Kanallar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/shorts">Shorts</a>
+          </li>
+          <% if (isAuth) { %>
+            <li class="nav-item">
+              <a class="nav-link active" href="/videos">Videolarım</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/channels/list">Kanallarım</a>
+            </li>
+            <% if (isAdmin) { %>
+              <li class="nav-item">
+                <a class="nav-link active" href="/categories">Kategoriler</a>
+              </li>
+            <% } %>
+            <li class="nav-item">
+              <a class="nav-link active" href="/logout">Çıkış Yap</a>
+            </li>
+          <% } else{ %>
+            <li class="nav-item">
+              <a class="nav-link active" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/register">Register</a>
+            </li>
+          <% } %>
+        </ul>
+        <% if (isAuth) { %>
+          <ul class="nav justify-content-end">
+            <li>
+              <p class="me-3"><%= user.userName %></p>
+            </li>
+          </ul>
+        <% } %>
+      </div>
+    </div>
+</nav>

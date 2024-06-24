@@ -1,0 +1,38 @@
+<%- include('partials/head') %>
+
+<body>
+    <%- include('partials/navbar') %>
+    <div class="container mt-3">
+        <h4 style="text-align: center; margin: 15px 0;">Eğer Videoyu ve Video içerik resmini değiştirmek istiyorsanız seçim yapınız</h4>
+        <form method="post" action="/videos/edit?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<%= video._id %>">
+            <label>Başlığı Giriniz</label>
+            <input type="text" name="title" id="title" class="form-control" value="<%= video.title %>">
+            <br>
+            <label>Açıklamayı Giriniz</label>
+            <textarea name="description" id="description" cols="30" rows="5" class="form-control"><%= video.description %></textarea>
+            <br>
+            <label>Videoyu Giriniz</label>
+            <input type="file" name="video" id="video" class="form-control">
+            <br>
+            <label>Video Görselini Giriniz</label>
+            <input type="file" name="file" id="file" class="form-control">
+            <br>
+            <label>Video Kategorisini Giriniz</label>
+            <select name="categoryId" id="categoryId" class="form-control">
+                <option value="-1">Seçiniz</option>
+                <% categories.forEach(category => { %>
+                    <option value="<%= category._id %>"><%= category.name %></option>
+                <% }) %>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-warning">Değişiklikleri Kaydet</button>
+        </form>
+        <input type="hidden" id="categoryIdInfo" value="<%= video.categoryId %>">
+        <script>
+            const select = document.querySelector("#categoryId");
+            select.value = document.querySelector("#categoryIdInfo").value;
+        </script>
+    </div>
+</body>
+</html>

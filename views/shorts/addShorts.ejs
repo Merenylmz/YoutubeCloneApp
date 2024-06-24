@@ -1,0 +1,28 @@
+<%- include('../partials/head') %>
+
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container mt-3" id="videoPass">
+        <form method="post" action="/shorts/add/api?_csrf=<%= csrfToken %>" enctype="multipart/form-data"> 
+            <!-- multipart yapmalıyız -->
+            <label>Başlığı giriniz:</label>
+            <input type="text" name="title" id="title" class="form-control">
+            <br>
+            <label>Açıklamayı giriniz:</label>
+            <input type="text" name="description" id="description" class="form-control">
+            <br>
+            <label>Videoyu giriniz:</label>
+            <input type="file" name="videourl" id="videourl" class="form-control">
+            <br>
+            <select name="channelId" id="channelId" class="form-control">
+                <option value="-1">Seçiniz</option>
+                <% channels.forEach(channel => { %>
+                    <option value="<%= channel._id %>"><%= channel.title %></option>
+                <% }) %>
+            </select>
+            <button type="submit" class="btn btn-primary mt-3">Yayınla</button>
+        </form>
+    </div>
+
+</body>
+</html>
